@@ -1,16 +1,10 @@
-# This is a sample Python script.
+from app import create_app
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+app = create_app()
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print("Registered routes:")
+    for rule in sorted(app.url_map.iter_rules(), key=lambda r: r.rule):
+        methods = ','.join(sorted(rule.methods))
+        print(f"{rule.rule} -> {rule.endpoint} [{methods}]")
+    app.run(debug=True, use_reloader=True)
