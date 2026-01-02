@@ -4,33 +4,92 @@
 <!-- -->
 {% block content %}
 <div class="container py-4">
-    <h1>All Workouts</h1>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="alert alert-info">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-    {% endwith %}
-    <div class="list-group">
-        {% for workout in workouts %}
-        <div class="list-group-item mb-3">
-            <h5 class="mb-1">Date: {{ workout.date.strftime('%Y-%m-%d') }}</h5>
-            <p class="mb-1">Pushups: {{ workout.pushups }}</p>
-            {% if workout.comment %}
-            <small class="text-muted">Comment: {{ workout.comment }}</small>
-            {% endif %}
-<!--         edit and delete buttons -->
-            <div class="mt-2">
-                <a href="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                <form method="POST" action="{{ url_for('workouts.delete_workout', workout_id=workout.id) }}" class="d-inline">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                </form>
-            </div>
-        </div>
-        {% else %}
-        <p>No workouts logged yet. Start by adding a new workout!</p>
-        {% endfor %}
+  <h1>All Workouts</h1>
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="alert alert-info">{{ messages[0] }}</div>
+  {% endif %} {% endwith %}
+  <div class="list-group">
+    {% for workout in workouts.items %}
+    <div class="list-group-item mb-3">
+      <h5 class="mb-1">Date: {{ workout.date.strftime('%Y-%m-%d') }}</h5>
+      <p class="mb-1">Pushups: {{ workout.pushups }}</p>
+      {% if workout.comment %}
+      <small class="text-muted">Comment: {{ workout.comment }}</small>
+      {% endif %}
+      <!--         edit and delete buttons -->
+      <div class="mt-2">
+        <a
+          href="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}"
+          class="btn btn-sm btn-outline-secondary"
+          >Edit</a
+        >
+        <form
+          method="POST"
+          action="{{ url_for('workouts.delete_workout', workout_id=workout.id) }}"
+          class="d-inline"
+        >
+          <button type="submit" class="btn btn-sm btn-outline-danger">
+            Delete
+          </button>
+        </form>
+      </div>
     </div>
+    {% else %}
+    <p>No workouts logged yet. Start by adding a new workout!</p>
+    {% endfor %}
+  </div>
+  <!--    pagination-->
+  <nav aria-label="workout pagination">
+    <ul class="pagination justify-content-center mt-4">
+      {% if workouts.has_prev %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{ url_for('workouts.all_workouts', page=workouts.prev_num) }}"
+          aria-label="Previous"
+        >
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </span>
+      </li>
+      {% endif %} {% for page_num in workouts.iter_pages() %} {% if page_num %}
+      {% if page_num == workouts.page %}
+      <li class="page-item active">
+        <span class="page-link">{{ page_num }}</span>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{ url_for('workouts.all_workouts', page=page_num) }}"
+          >{{ page_num }}</a
+        >
+      </li>
+      {% endif %} {% else %}
+      <li class="page-item disabled"><span class="page-link">…</span></li>
+      {% endif %} {% endfor %} {% if workouts.has_next %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{{ url_for('workouts.all_workouts', page=workouts.next_num) }}"
+          aria-label="Next"
+        >
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <span class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </span>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endblock %}
 </div>
-{% endblock %}

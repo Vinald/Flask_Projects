@@ -29,13 +29,14 @@ def add_workout_post():
         return redirect(url_for('workouts.add_workout'))
 
     flash('Workout added successfully!', 'success')
-    return redirect(url_for('workouts.index'))
+    return redirect(url_for('workouts.all_workouts'))
 
 
 @workouts.route('/workouts')
 @login_required
 def all_workouts():
-    user_workouts = WorkoutService.get_user_workouts(current_user.id)
+    page = request.args.get('page', 1, type=int)
+    user_workouts = WorkoutService.get_user_workouts(current_user.id, page=page)
     return render_template('workouts/workouts.html', workouts=user_workouts)
 
 

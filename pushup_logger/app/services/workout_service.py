@@ -1,6 +1,7 @@
 from datetime import datetime
 from app.extensions import db
 from app.models.workout import Workout
+from flask import request
 
 
 class WorkoutService:
@@ -36,9 +37,9 @@ class WorkoutService:
         return None
 
     @staticmethod
-    def get_user_workouts(user_id: int) -> list[Workout]:
-        """Get all workouts for a user."""
-        return Workout.query.filter_by(user_id=user_id).order_by(Workout.date.desc()).all()
+    def get_user_workouts(user_id: int, page: int = 1, per_page: int = 5):
+        """Get all workouts for a user with pagination."""
+        return Workout.query.filter_by(user_id=user_id).order_by(Workout.date.desc()).paginate(page=page, per_page=per_page)
 
     @staticmethod
     def get_workout_by_id(workout_id: int) -> Workout | None:
