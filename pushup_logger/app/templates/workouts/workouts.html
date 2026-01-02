@@ -5,14 +5,28 @@
 {% block content %}
 <div class="container py-4">
     <h1>All Workouts</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-info">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
     <div class="list-group">
         {% for workout in workouts %}
         <div class="list-group-item mb-3">
             <h5 class="mb-1">Date: {{ workout.date.strftime('%Y-%m-%d') }}</h5>
             <p class="mb-1">Pushups: {{ workout.pushups }}</p>
-            {% if workout.notes %}
-            <small class="text-muted">Notes: {{ workout.notes }}</small>
+            {% if workout.comment %}
+            <small class="text-muted">Comment: {{ workout.comment }}</small>
             {% endif %}
+<!--         edit and delete buttons -->
+            <div class="mt-2">
+                <a href="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}" class="btn btn-sm btn-outline-secondary">Edit</a>
+                <form method="POST" action="{{ url_for('workouts.delete_workout', workout_id=workout.id) }}" class="d-inline">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </div>
         </div>
         {% else %}
         <p>No workouts logged yet. Start by adding a new workout!</p>

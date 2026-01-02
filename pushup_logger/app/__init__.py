@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 from app.extensions import db
 from app.routes.auth import auth as auth_blueprint
-from app.routes.workout import main as main_blueprint
+from app.routes.workout import workouts as workout_blueprint
 from app.routes.user import user as user_blueprint
 from app.models.user import User
 from app.models.workout import Workout
@@ -32,7 +32,7 @@ def create_app():
 
     app.config.update(DEBUG=True, ENV="development")
 
-    app.register_blueprint(main_blueprint)
+    app.register_blueprint(workout_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(user_blueprint)
 

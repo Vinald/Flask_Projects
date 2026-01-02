@@ -39,3 +39,37 @@ class WorkoutService:
     def get_user_workouts(user_id: int) -> list[Workout]:
         """Get all workouts for a user."""
         return Workout.query.filter_by(user_id=user_id).order_by(Workout.date.desc()).all()
+
+    @staticmethod
+    def get_workout_by_id(workout_id: int) -> Workout | None:
+        """Get a workout by its ID."""
+        return Workout.query.get(workout_id)
+
+    @staticmethod
+    def delete_workout(workout_id: int) -> bool:
+        """Delete a workout by its ID. Returns True if deleted, False if not found."""
+        workout = Workout.query.get(workout_id)
+        if not workout:
+            return False
+        db.session.delete(workout)
+        db.session.commit()
+        return True
+
+    @staticmethod
+    def update_workout(workout_id: int, date: str, pushups: str , comment: str) -> tuple[Workout | None, str | None]:
+        """Update an existing workout. Returns (workout, None) on success or (None, error_message) on failure."""
+        workout = Workout.query.get(workout_id)
+        if not workout:
+            return None, "Workout not found"
+
+        error = WorkoutService.validate_workout(date, pushups)
+        if error:
+            return None, error
+
+        workout.date = datetime.strptime(date, '%Y-%m-%d').date()
+        workout.pushups = int(pushups)
+        workout.comment = comment or None
+
+        db.session.commit()
+        return workout, None
+        

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block title %}Edit Workout{% endblock %}
+<!-- -->
+{% block content %}
+<div class="container py-4">
+  <h1>Edit Workout</h1>
+  {% with messages = get_flashed_messages() %} {% if messages %}
+  <div class="alert alert-info">{{ messages[0] }}</div>
+  {% endif %} {% endwith %}
+  <form
+    method="POST"
+    action="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}"
+  >
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input
+        type="date"
+        class="form-control"
+        id="date"
+        name="date"
+        value="{{ workout.date.strftime('%Y-%m-%d') }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="pushups" class="form-label">Pushups</label>
+      <input
+        type="number"
+        class="form-control"
+        id="pushups"
+        name="pushups"
+        value="{{ workout.pushups }}"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Comment</label>
+      <textarea class="form-control" id="comment" name="comment" rows="3">
+{{ workout.comment or '' }}</textarea
+      >
+    </div>
+    <button type="submit" class="btn btn-primary">Update Workout</button>
+    <a href="{{ url_for('workouts.all_workouts') }}" class="btn btn-secondary"
+      >Cancel</a
+    >
+  </form>
+</div>
+{% endblock %}
