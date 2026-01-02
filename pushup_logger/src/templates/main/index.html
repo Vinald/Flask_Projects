@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block title %}Home{% endblock %}
+<!-- -->
+{% block content %}
+<div class="container py-4">
+    <h1>All Workouts</h1>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <div>
+            <img
+                    src="{{ url_for('static', filename='images/sam.jpg')}}"
+                    alt="welcome image"
+                    height="200px"
+                    width="auto"
+            />
+        </div>
+
+        <div class="px-4">
+            <p>
+                Welcome to the Pushup Logger App! This application is designed to help you track and
+                log your pushup workouts effectively. Whether you're a beginner or an experienced
+                fitness enthusiast, our app provides an easy way to monitor your progress and stay
+                motivated.
+            </p>
+            <p>
+                To get started, simply sign up for an account or log in if you already have one.
+                Once logged in, you can record your pushup sessions, view your workout history, and
+                analyze your performance over time.
+            </p>
+            <p>
+                Our user-friendly interface allows you to quickly add new workouts, set goals, and
+                track improvements. Stay consistent with your training and watch your strength grow!
+            </p>
+            <p>
+                Thank you for choosing the Pushup Logger App as your fitness companion. Let's get
+                started on your journey to better health and fitness!
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
