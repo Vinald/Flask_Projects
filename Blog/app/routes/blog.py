@@ -9,4 +9,4 @@ POSTS = [
 
 @blog_route.route('/')
 def index():
-    return render_template('blogs/index.html', posts=POSTS)
+    return render_template('blogs/index.html', posts=POSTS, title='Blog Home')
