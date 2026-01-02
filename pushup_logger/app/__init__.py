@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from src.auth import auth as auth_blueprint
-from src.main import main as main_blueprint
+from routes.auth import auth as auth_blueprint
+from routes.main import main as main_blueprint
 
 db = SQLAlchemy()
 

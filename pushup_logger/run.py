@@ -1,4 +1,4 @@
-from src import create_app   # or inner import if needed
+from app import create_app   # or inner import if needed
 app = create_app()
 
 # Print URL map for debugging when the server starts
