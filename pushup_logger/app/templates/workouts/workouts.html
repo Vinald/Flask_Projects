@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block title %}All Workouts{% endblock %}
+<!-- -->
+{% block content %}
+<div class="container py-4">
+    <h1>All Workouts</h1>
+    <div class="list-group">
+        {% for workout in workouts %}
+        <div class="list-group-item mb-3">
+            <h5 class="mb-1">Date: {{ workout.date.strftime('%Y-%m-%d') }}</h5>
+            <p class="mb-1">Pushups: {{ workout.pushups }}</p>
+            {% if workout.notes %}
+            <small class="text-muted">Notes: {{ workout.notes }}</small>
+            {% endif %}
+        </div>
+        {% else %}
+        <p>No workouts logged yet. Start by adding a new workout!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

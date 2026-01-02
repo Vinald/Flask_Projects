@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block title %}Add workout{% endblock %}
+<!-- -->
+{% block content %}
+<div class="container py-4">
+    <h1>Add a workout</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-info">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <form method="POST" action="{{ url_for('workouts.add_workout') }}">
+        <div class="mb-3">
+            <label for="date" class="form-label">Date</label>
+            <input type="date" class="form-control" id="date" name="date" required />
+        </div>
+        <div class="mb-3">
+            <label for="pushups" class="form-label">Pushups</label>
+            <input
+                type="number"
+                class="form-control"
+                id="pushups"
+                name="pushups"
+                required
+            />
+        </div>
+        <div class="mb-3">
+            <label for="comment" class="form-label">Comment</label>
+            <textarea
+                class="form-control"
+                id="comment"
+                name="comment"
+                rows="3"
+            ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Workout</button>
+    </form>
+</div>
+{% endblock %}

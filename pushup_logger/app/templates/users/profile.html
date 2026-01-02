@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+<!-- -->
+{% block title %}Profile{% endblock %}
+<!-- -->
+{% block content %}
+<div class="container py-4">
+    <h1>User Profile</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-info">
+                {{ messages[0] }}
+            </div>
+        {% endif %}
+    {% endwith %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">{{ current_user.name or 'No Name Provided' }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">{{ current_user.email }}</h6>
+            <p class="card-text">This is your profile page. Here you can view and manage your account details.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
