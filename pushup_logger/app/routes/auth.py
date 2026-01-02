@@ -1,4 +1,7 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from app.services.auth_service import AuthService
+from flask_login import login_required, logout_user, login_user
+
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -10,13 +13,24 @@ def signup():
 
 @auth.route('/signup', methods=['POST'])
 def signup_post():
-    name = request.form['name']
-    email = request.form['email']
-    password = request.form['password']
-    confirm_password = request.form['confirm_password']
+    name = request.form.get('name', '')
+    email = request.form.get('email', '')
+    password = request.form.get('password', '')
+    confirm_password = request.form.get('confirm_password', '')
 
-    print('$$$$$$$$$$$$$$', name, email, password, confirm_password)
+    # Validate
+    error = AuthService.validate_signup(name, email, password, confirm_password)
+    if error:
+        flash(error, 'danger')
+        return redirect(url_for('auth.signup'))
 
+    # Create user
+    user, error = AuthService.create_user(name, email, password)
+    if error:
+        flash(error, 'danger')
+        return redirect(url_for('auth.signup'))
+
+    flash('Account created successfully!', 'success')
     return redirect(url_for('auth.login'))
 
 
@@ -27,13 +41,20 @@ def login():
 
 @auth.route('/login', methods=['POST'])
 def login_post():
-    email = request.form['email']
-    password = request.form['password']
+    email = request.form.get('email', '')
+    password = request.form.get('password', '')
 
-    print('$$$$$$$$$$$$$$$$$$$$$$$$$$$', email, password)
+    user, error = AuthService.authenticate(email, password)
+    if error:
+        flash(error, 'danger')
+        return redirect(url_for('auth.login'))
+
+    login_user(user, remember=True)
     return redirect(url_for('main.profile'))
 
 
 @auth.route('/logout')
+@login_required
 def logout():
-    return render_template('auth/logout.html')
+    logout_user()
+    return redirect(url_for('main.index'))
