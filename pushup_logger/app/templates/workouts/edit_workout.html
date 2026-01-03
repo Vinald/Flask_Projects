@@ -5,9 +5,6 @@
 {% block content %}
 <div class="container py-4">
   <h1>Edit Workout</h1>
-  {% with messages = get_flashed_messages() %} {% if messages %}
-  <div class="alert alert-info">{{ messages[0] }}</div>
-  {% endif %} {% endwith %}
   <form
     method="POST"
     action="{{ url_for('workouts.edit_workout', workout_id=workout.id) }}"
