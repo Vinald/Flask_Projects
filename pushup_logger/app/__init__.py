@@ -3,7 +3,7 @@ import secrets
 from dotenv import load_dotenv
 from flask import Flask
 from flask_login import LoginManager
-
+from datetime import timedelta
 from app.extensions import db
 from app.routes.auth import auth as auth_blueprint
 from app.routes.workout import workouts as workout_blueprint
@@ -19,6 +19,9 @@ def create_app():
 
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY") or secrets.token_urlsafe(32)
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI", "sqlite:///db.sqlite3")
+    app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
+    app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
 
     db.init_app(app)
 

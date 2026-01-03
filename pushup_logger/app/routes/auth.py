@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app.services.auth_service import AuthService
-from flask_login import login_required, logout_user, login_user
+from flask_login import login_required, logout_user, login_user, current_user
 
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -8,6 +8,8 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth.route('/signup')
 def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('workouts.index'))
     return render_template('auth/signup.html')
 
 
@@ -18,13 +20,11 @@ def signup_post():
     password = request.form.get('password', '')
     confirm_password = request.form.get('confirm_password', '')
 
-    # Validate
     error = AuthService.validate_signup(name, email, password, confirm_password)
     if error:
         flash(error, 'danger')
         return redirect(url_for('auth.signup'))
 
-    # Create user
     user, error = AuthService.create_user(name, email, password)
     if error:
         flash(error, 'danger')
@@ -36,6 +36,8 @@ def signup_post():
 
 @auth.route('/login')
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('workouts.index'))
     return render_template('auth/login.html')
 
 
@@ -49,12 +51,28 @@ def login_post():
         flash(error, 'danger')
         return redirect(url_for('auth.login'))
 
+    # Flask-Login session
     login_user(user, remember=True)
+
+    # Store additional data in Flask session
+    session['user_id'] = user.id
+    session['user_name'] = user.name
+    session['user_email'] = user.email
+    session.permanent = True # Make the session permanent
+
+    flash(f'Welcome back, {user.name}!', 'success')
     return redirect(url_for('users.profile'))
 
 
 @auth.route('/logout')
 @login_required
 def logout():
+    # Clear session data
+    session.pop('user_id', None)
+    session.pop('user_name', None)
+    session.pop('user_email', None)
+
     logout_user()
+
+    flash('You have been logged out.', 'info')
     return redirect(url_for('workouts.index'))
